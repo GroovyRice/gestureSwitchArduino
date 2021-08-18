@@ -126,10 +126,7 @@ Gestures getGesture() {
   uint8_t error = 0;
 
   error = paj7620ReadReg(0x43, 1, &data);       // Read Bank_0_Reg_0x43/0x44 for gesture result.
-
-  if (error) {
-    return unknown
-  }
+  if(error) {return unknown}
 
   Gestures value = unknown;
 
@@ -138,28 +135,28 @@ Gestures getGesture() {
 
   switch (data) {                 // When different gestures be detected, the variable 'data' will be set to different values by paj7620ReadReg(0x43, 1, &data).
     case GES_RIGHT_FLAG:
-      value = right;
+      value = Right;
       break;
     case GES_LEFT_FLAG:
-      value = left;
+      value = Left;
       break;
     case GES_UP_FLAG:
-      value = up;
+      value = Up;
       break;
     case GES_DOWN_FLAG:
-      value = down;
+      value = Down;
       break;
     case GES_FORWARD_FLAG:
-      value = forward;
+      value = Forward;
       break;
     case GES_BACKWARD_FLAG:
-      value = backward;
+      value = Backward;
       break;
     case GES_CLOCKWISE_FLAG:
-      value = clockWise;
+      value = ClockWise;
       break;
     case GES_COUNT_CLOCKWISE_FLAG:
-      value = anticlockWise;
+      value = AnticlockWise;
       break;
     default:
       break;
