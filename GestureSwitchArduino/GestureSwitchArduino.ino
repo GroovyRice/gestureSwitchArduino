@@ -94,30 +94,46 @@ void doGesture(String temp) {
       num = getPoles(temp);
       if(num == 0) {
         digitalWrite(A1,1);
+        setPoles(1,temp);
       } else {
         digitalWrite(A1,0);
+        setPoles(0,temp);
       }
+      Serial.println("You swiped " + temp);
+      break;
     case 2:
       num = getPoles(temp);
       if(num == 0) {
-        digitalWrite(A1,1);
+        digitalWrite(A2,1);
+        setPoles(1,temp);
       } else {
-        digitalWrite(A1,0);
+        digitalWrite(A2,0);
+        setPoles(0,temp);
       }
+      Serial.println("You swiped " + temp);
+      break;
     case 3:
       num = getPoles(temp);
       if(num == 0) {
-        digitalWrite(A1,1);
+        digitalWrite(A3,1);
+        setPoles(1,temp);
       } else {
-        digitalWrite(A1,0);
+        digitalWrite(A3,0);
+        setPoles(0,temp);
       }
+      Serial.println("You swiped " + temp);
+      break;
     case 4:
       num = getPoles(temp);
       if(num == 0) {
-        digitalWrite(A1,1);
+        digitalWrite(A4,1);
+        setPoles(1,temp);
       } else {
-        digitalWrite(A1,0);
+        digitalWrite(A4,0);
+        setPoles(0,temp);
       }
+      Serial.println("You swiped " + temp);
+      break;
     default:
       break;
   }
