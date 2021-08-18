@@ -62,10 +62,10 @@ void setup() {
     Serial.println();
   }
 
-  setPoles(0,Up);
-  setPoles(0,Down);
-  setPoles(0,Left);
-  setPoles(0,Right);
+  setPoles(0,"Up");
+  setPoles(0,"Down");
+  setPoles(0,"Left");
+  setPoles(0,"Right");
 
   Serial.println("\nPAJ7620U2 TEST DEMO: Recognize 9 gestures.");
 
