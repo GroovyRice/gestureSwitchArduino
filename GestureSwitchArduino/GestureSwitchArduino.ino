@@ -120,198 +120,51 @@ int getSwipe(String path) {
   }
 }
 
-Gestures identifyGesture() {
+Gestures getGesture() {
   uint8_t data = 0;
   uint8_t data1 = 0;
   uint8_t error = 0;
 
-  Gestures returnVal = unknown;
-
   error = paj7620ReadReg(0x43, 1, &data);       // Read Bank_0_Reg_0x43/0x44 for gesture result.
-  if (error) return returnVal;
 
-  switch (data) {                  // When different gestures be detected, the variable 'data' will be set to different values by paj7620ReadReg(0x43, 1, &data).
+  if (error) {
+    return unknown
+  }
+
+  Gestures value = unknown;
+
+  delay(GES_ENTRY_TIME);
+  paj7620ReadReg(0x43, 1, &data);
+
+  switch (data) {                 // When different gestures be detected, the variable 'data' will be set to different values by paj7620ReadReg(0x43, 1, &data).
     case GES_RIGHT_FLAG:
-      delay(GES_ENTRY_TIME);
-      paj7620ReadReg(0x43, 1, &data);
-      if (data == GES_FORWARD_FLAG) {
-        Serial.println("Forward");
-        r=1;
-        l=1;
-        u=1;
-        d=1;
-        digitalWrite(A1, r); //right
-        digitalWrite(A2, l); //left
-        digitalWrite(A3, u); //up
-        digitalWrite(A4, d); //down
-        Serial.println(r);
-        Serial.println(l);
-        Serial.println(u);
-        Serial.println(d);
-        return Wave;
-        delay(GES_QUIT_TIME);
-      }
-      else if (data == GES_BACKWARD_FLAG)
-      {
-        Serial.println("Backward");
-        delay(GES_QUIT_TIME);
-      }
-      else
-      {
-        Serial.println("Right");
-
-        r=(r+1)%2;
-        digitalWrite(A1, r); //right
-        digitalWrite(A2, l); //left
-        digitalWrite(A3, u); //up
-        digitalWrite(A4, d); //down
-        Serial.println(r);
-        return Right;
-      }
+      value = right;
       break;
     case GES_LEFT_FLAG:
-      delay(GES_ENTRY_TIME);
-      paj7620ReadReg(0x43, 1, &data);
-      if (data == GES_FORWARD_FLAG)
-      {
-        Serial.println("Forward");
-        r=1;
-        l=1;
-        u=1;
-        d=1;
-        digitalWrite(A1, r); //right
-        digitalWrite(A2, l); //left
-        digitalWrite(A3, u); //up
-        digitalWrite(A4, d); //down
-        Serial.println(r);
-        Serial.println(l);
-        Serial.println(u);
-        Serial.println(d);
-        delay(GES_QUIT_TIME);
-      }
-      else if (data == GES_BACKWARD_FLAG)
-      {
-        Serial.println("Backward");
-        delay(GES_QUIT_TIME);
-      }
-      else
-      {
-        Serial.println("Left");
-        l=(l+1)%2;
-        digitalWrite(A1, r); //right
-        digitalWrite(A2, l); //left
-        digitalWrite(A3, u); //up
-        digitalWrite(A4, d); //down
-        Serial.println(l);
-        return Left;
-      }
+      value = left;
       break;
     case GES_UP_FLAG:
-      delay(GES_ENTRY_TIME);
-      paj7620ReadReg(0x43, 1, &data);
-      if (data == GES_FORWARD_FLAG)
-      {
-        Serial.println("Forward");
-        r=1;
-        l=1;
-        u=1;
-        d=1;
-        digitalWrite(A1, r); //right
-        digitalWrite(A2, l); //left
-        digitalWrite(A3, u); //up
-        digitalWrite(A4, d); //down
-        Serial.println(r);
-        Serial.println(l);
-        Serial.println(u);
-        Serial.println(d);
-        delay(GES_QUIT_TIME);
-      }
-      else if (data == GES_BACKWARD_FLAG)
-      {
-        Serial.println("Backward");
-        delay(GES_QUIT_TIME);
-      }
-      else
-      {
-        Serial.println("Up");
-        u=(u+1)%2;
-        digitalWrite(A1, r); //right
-        digitalWrite(A2, l); //left
-        digitalWrite(A3, u); //up
-        digitalWrite(A4, d); //down
-        Serial.println(u);
-        return Up;
-      }
+      value = up;
       break;
     case GES_DOWN_FLAG:
-      delay(GES_ENTRY_TIME);
-      paj7620ReadReg(0x43, 1, &data);
-      if (data == GES_FORWARD_FLAG)
-      {
-        Serial.println("Forward");
-        r=1;
-        l=1;
-        u=1;
-        d=1;
-        digitalWrite(A1, r); //right
-        digitalWrite(A2, l); //left
-        digitalWrite(A3, u); //up
-        digitalWrite(A4, d); //down
-        Serial.println(r);
-        Serial.println(l);
-        Serial.println(u);
-        Serial.println(d);
-        delay(GES_QUIT_TIME);
-      }
-      else if (data == GES_BACKWARD_FLAG)
-      {
-        Serial.println("Backward");
-        delay(GES_QUIT_TIME);
-      }
-      else
-      {
-        Serial.println("Down");
-        d=(d+1)%2;
-        digitalWrite(A1, r); //right
-        digitalWrite(A2, l); //left
-        digitalWrite(A3, u); //up
-        digitalWrite(A4, d); //down
-        Serial.println(d);
-        return Down;
-      }
+      value = down;
       break;
     case GES_FORWARD_FLAG:
-      Serial.println("Forward");
-      delay(GES_QUIT_TIME);
-      return Forward;
+      value = forward;
       break;
     case GES_BACKWARD_FLAG:
-      Serial.println("Backward");
-      delay(GES_QUIT_TIME);
-      return Backward;
+      value = backward;
       break;
     case GES_CLOCKWISE_FLAG:
-      Serial.println("Clockwise");
-      return ClockWise;
+      value = clockWise;
       break;
     case GES_COUNT_CLOCKWISE_FLAG:
-      Serial.println("anti-clockwise");
-      return AnticlockWise;
+      value = anticlockWise;
       break;
     default:
-      paj7620ReadReg(0x44, 1, &data1);
-      if (data1 == GES_WAVE_FLAG) {
-        Serial.println("wave");
-        r=0;
-        l=0;
-        u=0;
-        d=0;
-        digitalWrite(A1, r); //right
-        digitalWrite(A2, l); //left
-        digitalWrite(A3, u); //up
-        digitalWrite(A4, d); //down
-        return Wave;
-      }
       break;
   }
+  delay(GES_QUIT_TIME)
+
+  return value;
 }
