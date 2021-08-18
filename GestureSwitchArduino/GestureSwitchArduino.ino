@@ -87,22 +87,58 @@ void loop() {
 }
 
 void doGesture(String temp) {
+  int num;
   call = getSwipe("swipe" + temp + "Num");
   switch (call) {
     case 1:
-      digitalWrite(A1,1);
+      num = getPoles(temp);
+      if(num == 0) {
+        digitalWrite(A1,1);
+      } else {
+        digitalWrite(A1,0);
+      }
     case 2:
+      num = getPoles(temp);
+      if(num == 0) {
+        digitalWrite(A1,1);
+      } else {
+        digitalWrite(A1,0);
+      }
     case 3:
+      num = getPoles(temp);
+      if(num == 0) {
+        digitalWrite(A1,1);
+      } else {
+        digitalWrite(A1,0);
+      }
     case 4:
+      num = getPoles(temp);
+      if(num == 0) {
+        digitalWrite(A1,1);
+      } else {
+        digitalWrite(A1,0);
+      }
     default:
       break;
   }
 }
 
-void setPoles(int num, String temp) {
-  if (Firebase.setFloat(firebaseData, "/setPoles/" + temp, num)) {
+void setPoles(int num, String path) {
+  if (Firebase.setFloat(firebaseData, "/setPoles/" + path, num)) {
   if (firebaseData.dataType() == "float")
     Serial.println(firebaseData.floatData());
+  } else {
+    Serial.println(firebaseData.errorReason());
+  }
+}
+
+int getPoles(String path) {
+  if (Firebase.getInt(firebaseData, "/setPoles/" + path)) {
+    if (firebaseData.dataType() == "int")) {
+      temp = firebaseData.intData();
+      Serial.println(temp);
+      return temp
+    }
   } else {
     Serial.println(firebaseData.errorReason());
   }
