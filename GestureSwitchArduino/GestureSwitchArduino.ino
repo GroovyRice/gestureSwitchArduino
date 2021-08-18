@@ -13,8 +13,8 @@ FirebaseData firebaseData;
         You also can adjust the reaction time according to the actual circumstance.
 */
 #define GES_REACTION_TIME   500       // You can adjust the reaction time according to the actual circumstance.
-#define GES_ENTRY_TIME      800       // When you want to recognize the Forward/Backward gestures, your gestures' reaction time must less than GES_ENTRY_TIME(0.8s).
-#define GES_QUIT_TIME     500
+#define GES_ENTRY_TIME      0       // When you want to recognize the Forward/Backward gestures, your gestures' reaction time must less than GES_ENTRY_TIME(0.8s).
+#define GES_QUIT_TIME     0
 
 void setup() {
   uint8_t error = 0;
@@ -69,7 +69,7 @@ void setup() {
 
 void loop() {
   String gesture = getGesture();
-  if(gesture != "gesture") {
+  if(gesture != "unknown") {
     doGesture(gesture);
   }
   delay(100);
@@ -190,18 +190,18 @@ String getGesture() {
     case GES_DOWN_FLAG:
       value = "Down";
       break;
-    case GES_FORWARD_FLAG:
-      value = "Forward";
-      break;
-    case GES_BACKWARD_FLAG:
-      value = "Backward";
-      break;
-    case GES_CLOCKWISE_FLAG:
-      value = "ClockWise";
-      break;
-    case GES_COUNT_CLOCKWISE_FLAG:
-      value = "AnticlockWise";
-      break;
+//    case GES_FORWARD_FLAG:
+//      value = "Forward";
+//      break;
+//    case GES_BACKWARD_FLAG:
+//      value = "Backward";
+//      break;
+//    case GES_CLOCKWISE_FLAG:
+//      value = "ClockWise";
+//      break;
+//    case GES_COUNT_CLOCKWISE_FLAG:
+//      value = "AnticlockWise";
+//      break;
 //    case GES_WAVE_FLAG:
 //      value = "Wave";
 //      break;
