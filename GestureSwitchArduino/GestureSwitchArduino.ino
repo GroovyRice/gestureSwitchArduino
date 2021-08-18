@@ -12,9 +12,9 @@ FirebaseData firebaseData;
   Notice: When you want to recognize the Forward/Backward gestures, your gestures' reaction time must less than GES_ENTRY_TIME(0.8s).
         You also can adjust the reaction time according to the actual circumstance.
 */
-#define GES_REACTION_TIME   500       // You can adjust the reaction time according to the actual circumstance.
-#define GES_ENTRY_TIME      800       // When you want to recognize the Forward/Backward gestures, your gestures' reaction time must less than GES_ENTRY_TIME(0.8s).
-#define GES_QUIT_TIME     500
+#define GES_REACTION_TIME 500       // You can adjust the reaction time according to the actual circumstance.
+#define GES_ENTRY_TIME 800       // When you want to recognize the Forward/Backward gestures, your gestures' reaction time must less than GES_ENTRY_TIME(0.8s).
+#define GES_QUIT_TIME 500
 
 void setup() {
   uint8_t error = 0;
@@ -209,6 +209,5 @@ String getGesture() {
       break;
   }
   delay(GES_QUIT_TIME);
-
   return value;
 }
