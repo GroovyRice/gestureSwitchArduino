@@ -16,19 +16,6 @@ FirebaseData firebaseData;
 #define GES_ENTRY_TIME      800       // When you want to recognize the Forward/Backward gestures, your gestures' reaction time must less than GES_ENTRY_TIME(0.8s).
 #define GES_QUIT_TIME     500
 
-;enum Gestures {
-  unknown = 0,
-  Left,
-  Right,
-  Up,
-  Down,
-  Forward,
-  Backward,
-  ClockWise,
-  AnticlockWise,
-  Wave
-};
-
 void setup() {
   uint8_t error = 0;
 
@@ -56,16 +43,16 @@ void setup() {
    Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH, WIFI_SSID, WIFI_PASSWORD);
    Firebase.reconnectWiFi(true);
 
-   if (!Firebase.beginStream(firebaseData, path)) {
-    Serial.println("------Can't begin stream connection------");
-    Serial.println("REASON: " + firebaseData.errorReason());
-    Serial.println();
-  }
+//   if (!Firebase.beginStream(firebaseData, path)) {
+//    Serial.println("------Can't begin stream connection------");
+//    Serial.println("REASON: " + firebaseData.errorReason());
+//    Serial.println();
+//  }
 
-  setPoles(0,Up);
-  setPoles(0,Down);
-  setPoles(0,Left);
-  setPoles(0,Right);
+  setPoles(0,"Up");
+  setPoles(0,"Down");
+  setPoles(0,"Left");
+  setPoles(0,"Right");
 
   Serial.println("\nPAJ7620U2 TEST DEMO: Recognize 9 gestures.");
 
@@ -81,13 +68,13 @@ void setup() {
 }
 
 void loop() {
-  Gestures gesture = identifyGesture();
-  doGesture(String(gesture));
+  String gesture = getGesture();
+  doGesture(gesture);
   delay(100);
 }
 
 void doGesture(String temp) {
-  int num;
+  int num, call;
   call = getSwipe("swipe" + temp + "Num");
   switch (call) {
     case 1:
@@ -149,11 +136,12 @@ void setPoles(int num, String path) {
 }
 
 int getPoles(String path) {
+  int temp;
   if (Firebase.getInt(firebaseData, "/setPoles/" + path)) {
-    if (firebaseData.dataType() == "int")) {
+    if (firebaseData.dataType() == "int") {
       temp = firebaseData.intData();
       Serial.println(temp);
-      return temp
+      return temp;
     }
   } else {
     Serial.println(firebaseData.errorReason());
@@ -161,62 +149,63 @@ int getPoles(String path) {
 }
 
 int getSwipe(String path) {
+  int temp;
   if (Firebase.getInt(firebaseData, "/setGestures/" + path)) {
-    if (firebaseData.dataType() == "int")) {
+    if (firebaseData.dataType() == "int") {
       temp = firebaseData.intData();
       Serial.println(temp);
-      return temp
+      return temp;
     }
   } else {
     Serial.println(firebaseData.errorReason());
   }
 }
 
-Gestures getGesture() {
+String getGesture() {
   uint8_t data = 0;
   uint8_t data1 = 0;
   uint8_t error = 0;
 
   error = paj7620ReadReg(0x43, 1, &data);       // Read Bank_0_Reg_0x43/0x44 for gesture result.
-  if(error) {return unknown}
+  if(error) {return "unknown";}
 
-  Gestures value = unknown;
+  String value = "unknown";
 
   delay(GES_ENTRY_TIME);
   paj7620ReadReg(0x43, 1, &data);
 
   switch (data) {                 // When different gestures be detected, the variable 'data' will be set to different values by paj7620ReadReg(0x43, 1, &data).
     case GES_RIGHT_FLAG:
-      value = Right;
+      value = "Right";
       break;
     case GES_LEFT_FLAG:
-      value = Left;
+      value = "Left";
       break;
     case GES_UP_FLAG:
-      value = Up;
+      value = "Up";
       break;
     case GES_DOWN_FLAG:
-      value = Down;
+      value = "Down";
       break;
     case GES_FORWARD_FLAG:
-      value = Forward;
+      value = "Forward";
       break;
     case GES_BACKWARD_FLAG:
-      value = Backward;
+      value = "Backward";
       break;
     case GES_CLOCKWISE_FLAG:
-      value = ClockWise;
+      value = "ClockWise";
       break;
     case GES_COUNT_CLOCKWISE_FLAG:
-      value = AnticlockWise;
+      value = "AnticlockWise";
       break;
-    case GES_WAVE_FLAG:
-      value = Wave;
-      break;
+//    case GES_WAVE_FLAG:
+//      value = "Wave";
+//      break;
     default:
       break;
   }
-  delay(GES_QUIT_TIME)
+  delay(GES_QUIT_TIME);
 
   return value;
 }
