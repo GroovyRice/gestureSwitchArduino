@@ -16,18 +16,17 @@ FirebaseData firebaseData;
 #define GES_ENTRY_TIME      800       // When you want to recognize the Forward/Backward gestures, your gestures' reaction time must less than GES_ENTRY_TIME(0.8s).
 #define GES_QUIT_TIME     500
 
-;enum Gestures
-{
+;enum Gestures {
   unknown = 0,
-  left,
-  right,
-  up,
-  down,
-  forward,
-  backward,
-  clockWise,
-  anticlockWise,
-  wave
+  Left,
+  Right,
+  Up,
+  Down,
+  Forward,
+  Backward,
+  ClockWise,
+  AnticlockWise,
+  Wave
 };
 
 void setup() {
@@ -57,8 +56,7 @@ void setup() {
    Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH, WIFI_SSID, WIFI_PASSWORD);
    Firebase.reconnectWiFi(true);
 
-   if (!Firebase.beginStream(firebaseData, path))
-  {
+   if (!Firebase.beginStream(firebaseData, path)) {
     Serial.println("------Can't begin stream connection------");
     Serial.println("REASON: " + firebaseData.errorReason());
     Serial.println();
@@ -67,24 +65,16 @@ void setup() {
   Serial.println("\nPAJ7620U2 TEST DEMO: Recognize 9 gestures.");
 
   error = paj7620Init();      // initialize Paj7620 registers
-  if (error)
-  {
+  if (error) {
     Serial.print("INIT ERROR,CODE:");
     Serial.println(error);
   }
-  else
-  {
+  else {
     Serial.println("INIT OK");
   }
   Serial.println("Please input your gestures:\n");
 }
- /******************************************************************************************************************/
- // Define variables to hold switch values for turning LEDs on and off.
-    uint8_t r = 0;
-    uint8_t l = 0;
-    uint8_t u = 0;
-    uint8_t d = 0;
- /******************************************************************************************************************/
+
 
 int swipeUp, swipeDown, swipeLeft, swipeRight;
 
@@ -97,6 +87,9 @@ void loop() {
   delay(100);
 }
 
+void writePin(int num,) {
+
+}
 
 Gestures identifyGesture() {
   uint8_t data = 0;
@@ -108,13 +101,11 @@ Gestures identifyGesture() {
   error = paj7620ReadReg(0x43, 1, &data);       // Read Bank_0_Reg_0x43/0x44 for gesture result.
   if (error) return returnVal;
 
-  switch (data)                   // When different gestures be detected, the variable 'data' will be set to different values by paj7620ReadReg(0x43, 1, &data).
-  {
+  switch (data) {                  // When different gestures be detected, the variable 'data' will be set to different values by paj7620ReadReg(0x43, 1, &data).
     case GES_RIGHT_FLAG:
       delay(GES_ENTRY_TIME);
       paj7620ReadReg(0x43, 1, &data);
-      if (data == GES_FORWARD_FLAG)
-      {
+      if (data == GES_FORWARD_FLAG) {
         Serial.println("Forward");
         r=1;
         l=1;
@@ -128,7 +119,7 @@ Gestures identifyGesture() {
         Serial.println(l);
         Serial.println(u);
         Serial.println(d);
-        return wave;
+        return Wave;
         delay(GES_QUIT_TIME);
       }
       else if (data == GES_BACKWARD_FLAG)
@@ -146,7 +137,7 @@ Gestures identifyGesture() {
         digitalWrite(A3, u); //up
         digitalWrite(A4, d); //down
         Serial.println(r);
-        return right;
+        return Right;
       }
       break;
     case GES_LEFT_FLAG:
@@ -183,7 +174,7 @@ Gestures identifyGesture() {
         digitalWrite(A3, u); //up
         digitalWrite(A4, d); //down
         Serial.println(l);
-        return left;
+        return Left;
       }
       break;
     case GES_UP_FLAG:
@@ -220,7 +211,7 @@ Gestures identifyGesture() {
         digitalWrite(A3, u); //up
         digitalWrite(A4, d); //down
         Serial.println(u);
-        return up;
+        return Up;
       }
       break;
     case GES_DOWN_FLAG:
@@ -257,31 +248,30 @@ Gestures identifyGesture() {
         digitalWrite(A3, u); //up
         digitalWrite(A4, d); //down
         Serial.println(d);
-        return down;
+        return Down;
       }
       break;
     case GES_FORWARD_FLAG:
       Serial.println("Forward");
       delay(GES_QUIT_TIME);
-      return forward;
+      return Forward;
       break;
     case GES_BACKWARD_FLAG:
       Serial.println("Backward");
       delay(GES_QUIT_TIME);
-      return backward;
+      return Backward;
       break;
     case GES_CLOCKWISE_FLAG:
       Serial.println("Clockwise");
-      return clockWise;
+      return ClockWise;
       break;
     case GES_COUNT_CLOCKWISE_FLAG:
       Serial.println("anti-clockwise");
-      return anticlockWise;
+      return AnticlockWise;
       break;
     default:
       paj7620ReadReg(0x44, 1, &data1);
-      if (data1 == GES_WAVE_FLAG)
-      {
+      if (data1 == GES_WAVE_FLAG) {
         Serial.println("wave");
         r=0;
         l=0;
@@ -291,7 +281,7 @@ Gestures identifyGesture() {
         digitalWrite(A2, l); //left
         digitalWrite(A3, u); //up
         digitalWrite(A4, d); //down
-        return wave;
+        return Wave;
       }
       break;
   }
