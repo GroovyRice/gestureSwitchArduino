@@ -82,7 +82,7 @@ void setup() {
 
 void loop() {
   Gestures gesture = identifyGesture();
-  doGesture(String(gesture));
+  doGesture(gesture);
   delay(100);
 }
 
