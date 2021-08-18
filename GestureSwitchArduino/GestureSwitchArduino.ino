@@ -69,7 +69,9 @@ void setup() {
 
 void loop() {
   String gesture = getGesture();
-  doGesture(gesture);
+  if(gesture != "gesture") {
+    doGesture(gesture);
+  }
   delay(100);
 }
 
@@ -124,6 +126,7 @@ void doGesture(String temp) {
     default:
       break;
   }
+  return;
 }
 
 void setPoles(int num, String path) {
