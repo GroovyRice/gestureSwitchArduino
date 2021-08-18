@@ -13,7 +13,7 @@ FirebaseData firebaseData;
         You also can adjust the reaction time according to the actual circumstance.
 */
 #define GES_REACTION_TIME   500       // You can adjust the reaction time according to the actual circumstance.
-#define GES_ENTRY_TIME      800       // When you want to recognize the Forward/Backward gestures, your gestures' reaction time must less than GES_ENTRY_TIME(0.8s). 
+#define GES_ENTRY_TIME      800       // When you want to recognize the Forward/Backward gestures, your gestures' reaction time must less than GES_ENTRY_TIME(0.8s).
 #define GES_QUIT_TIME     500
 
 ;enum Gestures
@@ -30,10 +30,9 @@ FirebaseData firebaseData;
   wave
 };
 
-void setup()
-{
+void setup() {
   uint8_t error = 0;
-  
+
   pinMode(A1,OUTPUT);
   pinMode(A2,OUTPUT);
   pinMode(A3,OUTPUT);
@@ -43,7 +42,7 @@ void setup()
   Serial.begin(9600);
   delay(500);
   Serial.println();
- 
+
    Serial.print("Connecting to WiFi…");
    int status = WL_IDLE_STATUS;
    while (status != WL_CONNECTED) {
@@ -54,7 +53,7 @@ void setup()
    Serial.print(" IP: ");
    Serial.println(WiFi.localIP());
    Serial.println();
-   
+
    Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH, WIFI_SSID, WIFI_PASSWORD);
    Firebase.reconnectWiFi(true);
 
@@ -64,9 +63,9 @@ void setup()
     Serial.println("REASON: " + firebaseData.errorReason());
     Serial.println();
   }
-   
+
   Serial.println("\nPAJ7620U2 TEST DEMO: Recognize 9 gestures.");
-  
+
   error = paj7620Init();      // initialize Paj7620 registers
   if (error)
   {
@@ -81,14 +80,14 @@ void setup()
 /******************************************************************************************************************/
 }
  /******************************************************************************************************************/
- // Define variables to hold switch values for turning LEDs on and off.   
+ // Define variables to hold switch values for turning LEDs on and off.
     uint8_t r = 0;
     uint8_t l = 0;
     uint8_t u = 0;
     uint8_t d = 0;
  /******************************************************************************************************************/
 int swipeUpNum;
- 
+
 void loop()
 {
   Gestures gesture = identifyGesture();
@@ -109,7 +108,7 @@ void loop()
     //Failed, then print out the error detail
     Serial.println(firebaseData.errorReason());
   }
-  
+
 }
 
 Gestures identifyGesture()
@@ -117,7 +116,7 @@ Gestures identifyGesture()
   uint8_t data = 0;
   uint8_t data1 = 0;
   uint8_t error = 0;
-  
+
   Gestures returnVal = unknown;
 
   error = paj7620ReadReg(0x43, 1, &data);       // Read Bank_0_Reg_0x43/0x44 for gesture result.
@@ -309,5 +308,17 @@ Gestures identifyGesture()
         return wave;
       }
       break;
+  }
+}
+
+int getSwipe(String path) {
+  if (Firebase.getInt(firebaseData, "/setGestures/" + path)) {
+    if (firebaseData.dataType() == "int")) {
+      temp = firebaseData.intData();
+      Serial.println(temp);
+      return temp
+    }
+  } else {
+    Serial.println(firebaseData.errorReason());
   }
 }
