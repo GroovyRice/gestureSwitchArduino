@@ -62,6 +62,11 @@ void setup() {
     Serial.println();
   }
 
+  setPoles(0,Up);
+  setPoles(0,Down);
+  setPoles(0,Left);
+  setPoles(0,Right);
+
   Serial.println("\nPAJ7620U2 TEST DEMO: Recognize 9 gestures.");
 
   error = paj7620Init();      // initialize Paj7620 registers
@@ -75,20 +80,44 @@ void setup() {
   Serial.println("Please input your gestures:\n");
 }
 
-
-int swipeUp, swipeDown, swipeLeft, swipeRight;
-
 void loop() {
-  swipeUp = getSwipe("swipeUpNum");
-  swipeDown = getSwipe("swipeDownNum");
-  swipeLeft = getSwipe("swipeLeftNum");
-  swipeRight = getSwipe("swipeRightNum");
   Gestures gesture = identifyGesture();
+  doGesture(String(gesture));
   delay(100);
 }
 
-void writePin(int num,) {
+void doGesture(String temp) {
+  call = getSwipe("swipe" + temp + "Num");
+  switch (call) {
+    case 1:
+      digitalWrite(A1,1);
+    case 2:
+    case 3:
+    case 4:
+    default:
+      break;
+  }
+}
 
+void setPoles(int num, String temp) {
+  if (Firebase.setFloat(firebaseData, "/setPoles/" + temp, num)) {
+  if (firebaseData.dataType() == "float")
+    Serial.println(firebaseData.floatData());
+  } else {
+    Serial.println(firebaseData.errorReason());
+  }
+}
+
+int getSwipe(String path) {
+  if (Firebase.getInt(firebaseData, "/setGestures/" + path)) {
+    if (firebaseData.dataType() == "int")) {
+      temp = firebaseData.intData();
+      Serial.println(temp);
+      return temp
+    }
+  } else {
+    Serial.println(firebaseData.errorReason());
+  }
 }
 
 Gestures identifyGesture() {
@@ -284,17 +313,5 @@ Gestures identifyGesture() {
         return Wave;
       }
       break;
-  }
-}
-
-int getSwipe(String path) {
-  if (Firebase.getInt(firebaseData, "/setGestures/" + path)) {
-    if (firebaseData.dataType() == "int")) {
-      temp = firebaseData.intData();
-      Serial.println(temp);
-      return temp
-    }
-  } else {
-    Serial.println(firebaseData.errorReason());
   }
 }
