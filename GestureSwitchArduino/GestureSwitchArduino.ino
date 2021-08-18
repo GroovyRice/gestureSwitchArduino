@@ -158,6 +158,9 @@ Gestures getGesture() {
     case GES_COUNT_CLOCKWISE_FLAG:
       value = AnticlockWise;
       break;
+    case GES_WAVE_FLAG:
+      value = Wave;
+      break;
     default:
       break;
   }
