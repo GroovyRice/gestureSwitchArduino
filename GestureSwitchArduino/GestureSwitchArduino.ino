@@ -190,18 +190,18 @@ String getGesture() {
     case GES_DOWN_FLAG:
       value = "Down";
       break;
-    case GES_FORWARD_FLAG:
-      value = "Forward";
-      break;
-    case GES_BACKWARD_FLAG:
-      value = "Backward";
-      break;
-    case GES_CLOCKWISE_FLAG:
-      value = "ClockWise";
-      break;
-    case GES_COUNT_CLOCKWISE_FLAG:
-      value = "AnticlockWise";
-      break;
+//    case GES_FORWARD_FLAG:
+//      value = "Forward";
+//      break;
+//    case GES_BACKWARD_FLAG:
+//      value = "Backward";
+//      break;
+//    case GES_CLOCKWISE_FLAG:
+//      value = "ClockWise";
+//      break;
+//    case GES_COUNT_CLOCKWISE_FLAG:
+//      value = "AnticlockWise";
+//      break;
 //    case GES_WAVE_FLAG:
 //      value = "Wave";
 //      break;
