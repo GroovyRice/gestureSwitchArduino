@@ -24,7 +24,6 @@ void setup() {
   pinMode(A3,OUTPUT);
   pinMode(A4,OUTPUT);
 
- /******************************************************************************************************************/
   Serial.begin(9600);
   delay(500);
   Serial.println();
@@ -74,6 +73,74 @@ void loop() {
   }
   delay(100);
 }
+
+/*TO BE FIXED
+void AlterPoles(String path) {
+  int temp;
+  String u = "Up";
+  String d = "Down";
+  String l = "Left";
+  String r = "Right";
+  int unum = getSwipe("swipe" + u + "Num");
+  int dnum = getSwipe("swipe" + d + "Num");
+  int lnum = getSwipe("swipe" + l + "Num");
+  int rnum = getSwipe("swipe" + r + "Num");
+  switch (path):
+    case "one":
+      temp = 1;
+      break;
+    case "two":
+      temp = 2;
+      break;
+    case "three":
+      temp = 3;
+      break;
+    case "four":
+      temp = 4;
+      break;
+  if(unum == temp) {
+    temp = getAlterPoles(path);
+    setPoles(temp,u);
+  }
+}
+
+int getAlterPoles(String path) {
+  if (Firebase.getInt(firebaseData, "/alterPoles/" + path)) {
+    if (firebaseData.dataType() == "int") {
+      temp = firebaseData.intData();
+      Serial.println(temp);
+      return;
+    }
+  } else {
+    Serial.println(firebaseData.errorReason());
+  }
+}
+
+void setAlterPoles(int num, String path) {
+  String temp;
+  call = getSwipe("swipe" + path + "Num");
+  switch (call) {
+    case 1:
+      temp = "one";
+      break;
+    case 2:
+      temp = "two";
+      break;
+    case 3:
+      temp = "three";
+      break;
+    case 4:
+      temp = "four";
+      break;
+  }
+  if (Firebase.setFloat(firebaseData, "/alterPoles/" + temp, num) {
+  if (firebaseData.dataType() == "float")
+    Serial.println(firebaseData.floatData());
+  } else {
+    Serial.println(firebaseData.errorReason());
+  }
+}
+*/
 
 void doGesture(String temp) {
   int num, call;
