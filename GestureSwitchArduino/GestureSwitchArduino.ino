@@ -77,7 +77,6 @@ void setup() {
     Serial.println("INIT OK");
   }
   Serial.println("Please input your gestures:\n");
-/******************************************************************************************************************/
 }
  /******************************************************************************************************************/
  // Define variables to hold switch values for turning LEDs on and off.
@@ -86,33 +85,20 @@ void setup() {
     uint8_t u = 0;
     uint8_t d = 0;
  /******************************************************************************************************************/
-int swipeUpNum;
 
-void loop()
-{
+int swipeUp, swipeDown, swipeLeft, swipeRight;
+
+void loop() {
+  swipeUp = getSwipe("swipeUpNum");
+  swipeDown = getSwipe("swipeDownNum");
+  swipeLeft = getSwipe("swipeLeftNum");
+  swipeRight = getSwipe("swipeRightNum");
   Gestures gesture = identifyGesture();
   delay(100);
-
-  if (Firebase.getInt(firebaseData, "/setGestures/swipeUpNum")) {
-
-    //Success, then read the payload value
-
-    //Make sure payload value returned from server is integer
-    //This prevent you to get garbage data
-    if (firebaseData.dataType() == "int") {
-      swipeUpNum = firebaseData.intData();
-      Serial.println(swipeUpNum);
-    }
-
-  } else {
-    //Failed, then print out the error detail
-    Serial.println(firebaseData.errorReason());
-  }
-
 }
 
-Gestures identifyGesture()
-{
+
+Gestures identifyGesture() {
   uint8_t data = 0;
   uint8_t data1 = 0;
   uint8_t error = 0;
