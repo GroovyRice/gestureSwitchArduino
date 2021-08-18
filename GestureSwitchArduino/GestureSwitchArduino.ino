@@ -7,7 +7,6 @@
 #define WIFI_PASSWORD "4173935201"
 
 FirebaseData firebaseData;
-String path = "/Test";
 
 /*
   Notice: When you want to recognize the Forward/Backward gestures, your gestures' reaction time must less than GES_ENTRY_TIME(0.8s).
