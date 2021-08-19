@@ -49,6 +49,14 @@ void setup() {
   } else {
     Serial.println("INIT OK");
   }
+
+  setPoles(0,"One");
+  setPoles(0,"Two");
+  setPoles(0,"Three");
+  setPoles(0,"Four");
+  setOverride();
+
+  int Poles[] = {0,0,0,0};
   Serial.println("GESTURE SWITCH SETUP COMPLETE");
 }
 /*******************************************************************************/
@@ -67,8 +75,40 @@ void loop() {
     count--;
     gesture = "unknown";
   }
+
+}
+/*******************************************************************************/
+
+void checkOverride() {
+  if (Firebase.getInt(firebaseData, "/alterPoles/overrideFlag")) {
+    if (firebaseData.dataType() == "boolean") {
+      int temp = firebaseData.intData();
+      if(temp == 1) {
+        setOverride();
+        if(Poles[1] == getPoles("One")) {switchPole("One");}
+        if(Poles[2] == getPoles("Two")) {switchPole("Two");}
+        if(Poles[3] == getPoles("Three")) {switchPole("Three");}
+        if(Poles[4] == getPoles("Four")) {switchPole("Four");}
+        return;
+      } else {
+        return;
+      }
+    }
+  } else {
+    Serial.println(firebaseData.errorReason());
+  }
 }
 
+/*******************************************************************************/
+
+void setOverride() {
+  if (Firebase.setInt(firebaseData, "/alterPoles/overrideFlag", 0)) {
+  if (firebaseData.dataType() == "int")
+    Serial.println(firebaseData.intData());
+  } else {
+    Serial.println(firebaseData.errorReason());
+  }
+}
 /*******************************************************************************/
 //Takes the string of the pole that will be changed and sets it to the opposite
 //of its current state.
@@ -78,15 +118,19 @@ void switchPole(String path) {
   if (path == "One") {
     digitalWrite(A1,call);
     setPoles(call,path);
+    Poles[1] = call;
   } else if (path == "Two") {
     digitalWrite(A2,call);
     setPoles(call,path);
+    Poles[2] = call;
   } else if (path == "Three") {
     digitalWrite(A3,call);
     setPoles(call,path);
+    Poles[3] = call;
   } else if (path == "Four") {
     digitalWrite(A4,call);
     setPoles(call,path);
+    Poles[4] = call;
   } else {
     return;
   }
