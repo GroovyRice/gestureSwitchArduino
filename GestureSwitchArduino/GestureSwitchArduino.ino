@@ -56,7 +56,6 @@ void setup() {
   setPoles(0,"Four");
   setOverride();
 
-  int Poles[] = {0,0,0,0};
   Serial.println("GESTURE SWITCH SETUP COMPLETE");
 }
 /*******************************************************************************/
@@ -64,6 +63,7 @@ void setup() {
 int count;
 String gesture;
 byte data;
+int Poles[] = {0,0,0,0};
 
 /*******************************************************************************/
 //MAIN PROGRAM LOOP
