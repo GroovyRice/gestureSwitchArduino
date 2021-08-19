@@ -141,13 +141,14 @@ void setPoles(int num, String path) {
 /*******************************************************************************/
 
 void doGesture(String gesture) {
+  int call = getSwipe(gesture);
 
 }
 
 /*******************************************************************************/
 
 int getSwipe(String path) {
-  if (Firebase.getInt(firebaseData, "/setGestures/" + path)) {
+  if (Firebase.getInt(firebaseData, "/setGestures/swipe" + path +"Num")) {
     if (firebaseData.dataType() == "int") {
       int temp = firebaseData.intData();
       Serial.println(temp);
