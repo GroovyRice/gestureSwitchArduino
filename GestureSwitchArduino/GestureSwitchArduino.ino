@@ -28,25 +28,19 @@ void setup() {
   delay(500);
   Serial.println();
 
-   Serial.print("Connecting to WiFi…");
-   int status = WL_IDLE_STATUS;
-   while (status != WL_CONNECTED) {
-   status = WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-   Serial.print(".");
-   delay(300);
-   }
-   Serial.print(" IP: ");
-   Serial.println(WiFi.localIP());
-   Serial.println();
+  Serial.print("Connecting to WiFi…");
+  int status = WL_IDLE_STATUS;
+  while (status != WL_CONNECTED) {
+    status = WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+    Serial.print(".");
+    delay(300);
+  }
+  Serial.print(" IP: ");
+  Serial.println(WiFi.localIP());
+  Serial.println();
 
-   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH, WIFI_SSID, WIFI_PASSWORD);
-   Firebase.reconnectWiFi(true);
-
-//   if (!Firebase.beginStream(firebaseData, path)) {
-//    Serial.println("------Can't begin stream connection------");
-//    Serial.println("REASON: " + firebaseData.errorReason());
-//    Serial.println();
-//  }
+  Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH, WIFI_SSID, WIFI_PASSWORD);
+  Firebase.reconnectWiFi(true);
 
   setPoles(0,"Up");
   setPoles(0,"Down");
@@ -59,12 +53,11 @@ void setup() {
   if (error) {
     Serial.print("INIT ERROR,CODE:");
     Serial.println(error);
-  }
-  else {
+  } else {
     Serial.println("INIT OK");
   }
   Serial.println("Please input your gestures:\n");
-}
+  }
 
 void loop() {
   String gesture = getGesture();
@@ -74,73 +67,33 @@ void loop() {
   delay(100);
 }
 
-/*TO BE FIXED
-void AlterPoles(String path) {
-  int temp;
-  String u = "Up";
-  String d = "Down";
-  String l = "Left";
-  String r = "Right";
-  int unum = getSwipe("swipe" + u + "Num");
-  int dnum = getSwipe("swipe" + d + "Num");
-  int lnum = getSwipe("swipe" + l + "Num");
-  int rnum = getSwipe("swipe" + r + "Num");
-  switch (path):
-    case "one":
-      temp = 1;
-      break;
-    case "two":
-      temp = 2;
-      break;
-    case "three":
-      temp = 3;
-      break;
-    case "four":
-      temp = 4;
-      break;
-  if(unum == temp) {
-    temp = getAlterPoles(path);
-    setPoles(temp,u);
-  }
+void alterPoles() {
+  int poleOne, poleTwo, poleThree, poleFour;
+  poleOne = getAlterPoles("One");
+  poleTwo = getAlterPoles("Two");
+  poleThree = getAlterPoles("Three");
+  poleFour = getAlterPoles("Four");
+  digitalWrite(A1,poleOne);
+  digitalWrite(A2,poleTwo);
+  digitalWrite(A3,poleThree);
+  digitalWrite(A4,poleFour);
 }
 
 int getAlterPoles(String path) {
-  if (Firebase.getInt(firebaseData, "/alterPoles/" + path)) {
-    if (firebaseData.dataType() == "int") {
-      temp = firebaseData.intData();
+  if (Firebase.getInt(firebaseData, "/alterPoles/pole" + path)) {
+    if (firebaseData.dataType() == "boolean") {
+      temp = firebaseData.boolData();
       Serial.println(temp);
-      return;
+      if(temp) {
+        return 1;
+      } else {
+        return 0;
+      }
     }
   } else {
     Serial.println(firebaseData.errorReason());
   }
 }
-
-void setAlterPoles(int num, String path) {
-  String temp;
-  call = getSwipe("swipe" + path + "Num");
-  switch (call) {
-    case 1:
-      temp = "one";
-      break;
-    case 2:
-      temp = "two";
-      break;
-    case 3:
-      temp = "three";
-      break;
-    case 4:
-      temp = "four";
-      break;
-  }
-  if (Firebase.setFloat(firebaseData, "/alterPoles/" + temp, num) {
-  if (firebaseData.dataType() == "float")
-    Serial.println(firebaseData.floatData());
-  } else {
-    Serial.println(firebaseData.errorReason());
-  }
-}
-*/
 
 void doGesture(String temp) {
   int num, call;
