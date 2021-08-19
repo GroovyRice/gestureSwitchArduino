@@ -81,7 +81,7 @@ void loop() {
 
 void checkOverride() {
   if (Firebase.getInt(firebaseData, "/alterPoles/overrideFlag")) {
-    if (firebaseData.dataType() == "boolean") {
+    if (firebaseData.dataType() == "int") {
       int temp = firebaseData.intData();
       if(temp == 1) {
         setOverride();
