@@ -76,6 +76,7 @@ void loop() {
     gesture = "unknown";
   }
   checkOverride();
+  Serial.println(Poles);
 }
 /*******************************************************************************/
 
@@ -84,11 +85,11 @@ void checkOverride() {
     if (firebaseData.dataType() == "int") {
       int temp = firebaseData.intData();
       if(temp == 1) {
+        if(Poles[0] == getPoles("One")) {switchPole("One");}
+        if(Poles[1] == getPoles("Two")) {switchPole("Two");}
+        if(Poles[2] == getPoles("Three")) {switchPole("Three");}
+        if(Poles[3] == getPoles("Four")) {switchPole("Four");}
         setOverride();
-        if(Poles[1] == getPoles("One")) {switchPole("One");}
-        if(Poles[2] == getPoles("Two")) {switchPole("Two");}
-        if(Poles[3] == getPoles("Three")) {switchPole("Three");}
-        if(Poles[4] == getPoles("Four")) {switchPole("Four");}
         return;
       } else {
         return;
@@ -118,19 +119,19 @@ void switchPole(String path) {
   if (path == "One") {
     digitalWrite(A1,call);
     setPoles(call,path);
-    Poles[1] = call;
+    Poles[0] = call;
   } else if (path == "Two") {
     digitalWrite(A2,call);
     setPoles(call,path);
-    Poles[2] = call;
+    Poles[1] = call;
   } else if (path == "Three") {
     digitalWrite(A3,call);
     setPoles(call,path);
-    Poles[3] = call;
+    Poles[2] = call;
   } else if (path == "Four") {
     digitalWrite(A4,call);
     setPoles(call,path);
-    Poles[4] = call;
+    Poles[3] = call;
   } else {
     return;
   }
