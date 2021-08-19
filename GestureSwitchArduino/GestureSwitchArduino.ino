@@ -84,10 +84,10 @@ void checkOverride() {
     if (firebaseData.dataType() == "int") {
       int temp = firebaseData.intData();
       if(temp == 1) {
-        Serial.println("Poles[0] = " + Poles[0]);
-        Serial.println("getPoles("One") = " + getPoles("One"));
-        Serial.println("Poles[1] = " + Poles[1]);
-        Serial.println("getPoles("Two") = " + getPoles("Two"));
+        if(Poles[0] != getPoles("One")) { switchPole("One");}
+        if(Poles[1] != getPoles("Two")) { switchPole("Two");}
+        if(Poles[2] != getPoles("Three")) { switchPole("Three");}
+        if(Poles[3] != getPoles("Four")) { switchPole("Four");}
         setOverride();
         return;
       } else {
@@ -103,8 +103,7 @@ void checkOverride() {
 
 void setOverride() {
   if (Firebase.setInt(firebaseData, "/alterPoles/overrideFlag", 0)) {
-  if (firebaseData.dataType() == "int")
-    Serial.println(firebaseData.intData());
+  if (firebaseData.dataType() == "int"){
   } else {
     Serial.println(firebaseData.errorReason());
   }
@@ -176,7 +175,6 @@ void setPoles(int num, String path) {
   }
   if (Firebase.setBool(firebaseData, "/alterPoles/pole" + path, call)) {
   if (firebaseData.dataType() == "boolean")
-    Serial.println(firebaseData.boolData());
   } else {
     Serial.println(firebaseData.errorReason());
   }
