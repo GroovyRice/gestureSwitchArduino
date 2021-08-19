@@ -230,7 +230,7 @@ void getGesture(String* value,int* num) {
   uint8_t error = paj7620ReadReg(0x43, 1, &data);       // Read Bank_0_Reg_0x43/0x44 for gesture result.
   if(error) {return;}
 
-  delay(GES_ENTRY_TIME);
+  delay(100);
   paj7620ReadReg(0x43, 1, &data);
 
   switch (data) {                 // When different gestures be detected, the variable 'data' will be set to different values by paj7620ReadReg(0x43, 1, &data).
@@ -272,6 +272,5 @@ void getGesture(String* value,int* num) {
     default:
       break;
   }
-  delay(GES_QUIT_TIME);
   return;
 }
