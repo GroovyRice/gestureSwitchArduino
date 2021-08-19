@@ -84,7 +84,6 @@ void checkOverride() {
     if (firebaseData.dataType() == "int") {
       int temp = firebaseData.intData();
       if(temp == 1) {
-        Serial.println("checkOverride was Run and succeeded.");
         if(Poles[0] != getPoles("One")) { statePole("One");}
         if(Poles[1] != getPoles("Two")) { statePole("Two");}
         if(Poles[2] != getPoles("Three")) { statePole("Three");}
@@ -103,7 +102,6 @@ void checkOverride() {
 /*******************************************************************************/
 
 void setOverride() {
-  Serial.println("setOverride was Run.");
   if (Firebase.setInt(firebaseData, "/alterPoles/overrideFlag", 0)) {
   if (firebaseData.dataType() == "int")
     Serial.println(firebaseData.intData());
@@ -116,7 +114,6 @@ void setOverride() {
 //Takes the string of the pole that will be changed and sets it to the opposite
 //of its current state.
 void statePole(String path) {
-  Serial.println("StatePoles was Run.");
   int call = getPoles(path);
   if (path == "One") {
     digitalWrite(A1,call);
@@ -144,7 +141,7 @@ void statePole(String path) {
 //Takes the string of the pole that will be changed and sets it to the opposite
 //of its current state.
 void switchPole(String path) {
-  Serial.println("SwitchPoles was Run.");
+  Serial.println("SwitchPoles was Run. The Path is " + path);
   int call = getPoles(path);
   call = invert(call);
   if (path == "One") {
