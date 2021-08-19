@@ -236,18 +236,22 @@ void getGesture(String* value,int* num) {
   switch (data) {                 // When different gestures be detected, the variable 'data' will be set to different values by paj7620ReadReg(0x43, 1, &data).
     case GES_RIGHT_FLAG:
       *value = "Right";
+      if(getSwipe("Right")=="none") {return;}
       *num = 1;
       break;
     case GES_LEFT_FLAG:
       *value = "Left";
+      if(getSwipe("Left")=="none") {return;}
       *num = 1;
       break;
     case GES_UP_FLAG:
       *value = "Up";
+      if(getSwipe("Up")=="none") {return;}
       *num = 1;
       break;
     case GES_DOWN_FLAG:
       *value = "Down";
+      if(getSwipe("Down")=="none") {return;}
       *num = 1;
       break;
 //    case GES_FORWARD_FLAG:
