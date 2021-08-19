@@ -79,13 +79,13 @@ void switchPole(String path) {
     digitalWrite(A1,call);
     setPoles(call,path);
   } else if (path == "Two") {
-    digitalWrite(A2,invert(call));
+    digitalWrite(A2,call);
     setPoles(call,path);
   } else if (path == "Three") {
-    digitalWrite(A3,invert(call));
+    digitalWrite(A3,call);
     setPoles(call,path);
   } else if (path == "Four") {
-    digitalWrite(A4,invert(call));
+    digitalWrite(A4,call);
     setPoles(call,path);
   } else {
     return;
