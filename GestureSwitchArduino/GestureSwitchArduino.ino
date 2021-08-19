@@ -63,7 +63,7 @@ void loop() {
   getGesture(&gesture,&count); //returns a count and the gesture as a String
   //if a gesture was found and it enters the case and leaves with default values.
   if(gesture != "unknown" && count == 1) {
-    switchPole(getSwipe(gesture));
+    doGesture(gesture);
     count--;
     gesture = "unknown";
   }
