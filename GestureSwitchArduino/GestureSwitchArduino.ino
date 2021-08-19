@@ -74,14 +74,21 @@ void loop() {
 //of its current state.
 void switchPole(String path) {
   int call = getPoles(path);
-  if (path == "One") {
-    digitalWrite(A1,invert(call));
-  } else if (path == "Two") {
-    digitalWrite(A2,invert(call));
-  } else if (path == "Three") {
-    digitalWrite(A3,invert(call));
-  } else if (path == "Four") {
-    digitalWrite(A4,invert(call));
+  switch (path) {
+    case "One":
+      digitalWrite(A1,invert(call));
+      break;
+    case "Two":
+      digitalWrite(A2,invert(call));
+      break;
+    case "Three":
+      digitalWrite(A3,invert(call));
+      break;
+    case "Four":
+      digitalWrite(A4,invert(call));
+      break;
+    default:
+      break;
   }
   return;
 }
@@ -133,10 +140,10 @@ void setPoles(int num, String path) {
 
 /*******************************************************************************/
 
-int getSwipe(String path) {
-  if (Firebase.getInt(firebaseData, "/setGestures/swipe" + path +"Num")) {
-    if (firebaseData.dataType() == "int") {
-      int temp = firebaseData.intData();
+String getSwipe(String path) {
+  if (Firebase.getString(firebaseData, "/setGestures/swipe" + path +"Num")) {
+    if (firebaseData.dataType() == "string") {
+      String temp = firebaseData.intData();
       Serial.println(temp);
       return temp;
     }
