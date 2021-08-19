@@ -80,6 +80,8 @@ void loop() {
     doGesture(gesture);
   }
   delay(100);
+  alterPoles()
+  
   secs = rtc.getSeconds();
 
   //MAIN CLOCK LOOP
