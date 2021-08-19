@@ -95,7 +95,7 @@ void checkOverride() {
       }
     }
   } else {
-    Serial.println(firebaseData.errorReason());
+    Serial.println("FireBase Err 1: " +firebaseData.errorReason());
   }
 }
 
@@ -106,7 +106,7 @@ void setOverride() {
   if (firebaseData.dataType() == "int")
     Serial.println(firebaseData.intData());
   } else {
-    Serial.println(firebaseData.errorReason());
+    Serial.println("FireBase Err 2: " +firebaseData.errorReason());
   }
 }
 
@@ -189,7 +189,7 @@ int getPoles(String path) {
       }
     }
   } else {
-    Serial.println(firebaseData.errorReason());
+    Serial.println("FireBase Err 3: " +firebaseData.errorReason());
   }
 }
 
@@ -206,7 +206,7 @@ void setPoles(int num, String path) {
   if (firebaseData.dataType() == "boolean")
     Serial.println(firebaseData.boolData());
   } else {
-    Serial.println(firebaseData.errorReason());
+    Serial.println("FireBase Err 4: " +firebaseData.errorReason());
   }
 }
 
@@ -219,7 +219,7 @@ String getSwipe(String path) {
       return temp;
     }
   } else {
-    Serial.println(firebaseData.errorReason());
+    Serial.println("FireBase Err 4: " +firebaseData.errorReason());
   }
 }
 
