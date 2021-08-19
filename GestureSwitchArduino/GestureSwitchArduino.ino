@@ -42,24 +42,6 @@ void setup() {
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH, WIFI_SSID, WIFI_PASSWORD);
   Firebase.reconnectWiFi(true);
 
-<<<<<<< HEAD
-  //setPoles(0,"Up");
-  //setPoles(0,"Down");
-  //setPoles(0,"Left");
-  //setPoles(0,"Right");
-=======
-//  rtc.begin();
-//  setRTC();  // get Epoch time from Internet Time Service
-//  fixTimeZone();
-
-  setPoles(0,"Up");
-  setPoles(0,"Down");
-  setPoles(0,"Left");
-  setPoles(0,"Right");
-
-  Serial.println("\nPAJ7620U2 TEST DEMO: Recognize 9 gestures.");
->>>>>>> e2c7997c37f35cb0ba5cf382041a3946964a82f6
-
   uint8_t error = paj7620Init();      // initialize Paj7620 registers
   if (error) {
     Serial.print("INIT ERROR,CODE:");
@@ -76,80 +58,34 @@ String gesture;
 byte data;
 
 /*******************************************************************************/
+//MAIN PROGRAM LOOP
 void loop() {
-  //MAKE getGesture() to return a number
-  getGesture(&gesture,&count);
+  getGesture(&gesture,&count); //returns a count and the gesture as a String
+  //if a gesture was found and it enters the case and leaves with default values.
   if(gesture != "unknown" && count == 1) {
     doGesture(gesture);
     count--;
+    gesture = "unknown";
   }
-<<<<<<< HEAD
-=======
-  delay(100);
-  // alterPoles();
-  
-//  secs = rtc.getSeconds();
-//
-//  //MAIN CLOCK LOOP
-//  if (secs == 0) fixTimeZone(); // when secs is 0, update everything and correct for time zone
-//  // otherwise everything else stays the same.
-//  printDate();
-//  printTime();
-//  Serial.println();
-//  while (secs == rtc.getSeconds())delay(10); // wait until seconds change
-//  if (mins==59 && secs ==0) setRTC(); // get NTP time every hour at minute 59
->>>>>>> e2c7997c37f35cb0ba5cf382041a3946964a82f6
 }
 
 /*******************************************************************************/
-
-void doGesture(String temp) {
-  int num, call;
-  call = getSwipe("swipe" + temp + "Num");
-  switch (call) {
-    case 1:
-      num = getPoles(temp);
-      if(num == 0) {
-        digitalWrite(A1,1);
-        setPoles(1,temp);
-      } else {
-        digitalWrite(A1,0);
-        setPoles(0,temp);
-      }
-      Serial.println("You swiped " + temp);
+//Takes the string of the pole that will be changed and sets it to the opposite
+//of its current state.
+void switchPole(String path) {
+  int call = getPoles(path);
+  switch (path) {
+    case "One":
+      digitalWrite(A1,invert(call));
       break;
-    case 2:
-      num = getPoles(temp);
-      if(num == 0) {
-        digitalWrite(A2,1);
-        setPoles(1,temp);
-      } else {
-        digitalWrite(A2,0);
-        setPoles(0,temp);
-      }
-      Serial.println("You swiped " + temp);
+    case "Two":
+      digitalWrite(A2,invert(call));
       break;
-    case 3:
-      num = getPoles(temp);
-      if(num == 0) {
-        digitalWrite(A3,1);
-        setPoles(1,temp);
-      } else {
-        digitalWrite(A3,0);
-        setPoles(0,temp);
-      }
-      Serial.println("You swiped " + temp);
+    case "Three":
+      digitalWrite(A3,invert(call));
       break;
-    case 4:
-      num = getPoles(temp);
-      if(num == 0) {
-        digitalWrite(A4,1);
-        setPoles(1,temp);
-      } else {
-        digitalWrite(A4,0);
-        setPoles(0,temp);
-      }
-      Serial.println("You swiped " + temp);
+    case "Four":
+      digitalWrite(A4,invert(call));
       break;
     default:
       break;
@@ -158,34 +94,62 @@ void doGesture(String temp) {
 }
 
 /*******************************************************************************/
-
-void setPoles(int num, String path) {
-  if (Firebase.setFloat(firebaseData, "/setPoles/" + path, num)) {
-  if (firebaseData.dataType() == "float")
-    Serial.println(firebaseData.floatData());
+//Inverts 0 or 1 to 0 or 1
+int invert(int num) {
+  if(num == 1) {
+    return 0;
   } else {
-    Serial.println(firebaseData.errorReason());
+    return 1;
   }
 }
 
+/*******************************************************************************/
+
 int getPoles(String path) {
-  int temp;
-  if (Firebase.getInt(firebaseData, "/setPoles/" + path)) {
-    if (firebaseData.dataType() == "int") {
-      temp = firebaseData.intData();
-      Serial.println(temp);
-      return temp;
+  bool temp;
+  if (Firebase.getBool(firebaseData, "/alterPoles/pole" + path)) {
+    if (firebaseData.dataType() == "boolean") {
+      temp = firebaseData.boolData();
+      if(temp) {
+        return 1;
+      } else {
+        return 0;
+      }
     }
   } else {
     Serial.println(firebaseData.errorReason());
   }
 }
 
+/*******************************************************************************/
+
+void setPoles(int num, String path) {
+  bool call;
+  if(num == 1) {
+    call = true;
+  } else {
+    call = false;
+  }
+  if (Firebase.setBool(firebaseData, "/alterPoles/pole" + path, call)) {
+  if (firebaseData.dataType() == "boolean")
+    Serial.println(firebaseData.boolData());
+  } else {
+    Serial.println(firebaseData.errorReason());
+  }
+}
+
+/*******************************************************************************/
+
+void doGesture(String gesture) {
+
+}
+
+/*******************************************************************************/
+
 int getSwipe(String path) {
-  int temp;
   if (Firebase.getInt(firebaseData, "/setGestures/" + path)) {
     if (firebaseData.dataType() == "int") {
-      temp = firebaseData.intData();
+      int temp = firebaseData.intData();
       Serial.println(temp);
       return temp;
     }
