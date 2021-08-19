@@ -70,10 +70,9 @@ int Poles[] = {0,0,0,0};
 void loop() {
   getGesture(&gesture,&count); //returns a count and the gesture as a String
   //if a gesture was found and it enters the case and leaves with default values.
-  if(gesture != "unknown" && count == 1) {
+  if(count == 1) {
     switchPole(getSwipe(gesture));
     count--;
-    gesture = "unknown";
   }
   checkOverride();
 }
