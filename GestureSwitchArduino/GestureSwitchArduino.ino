@@ -53,9 +53,9 @@ void setup() {
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH, WIFI_SSID, WIFI_PASSWORD);
   Firebase.reconnectWiFi(true);
 
-  rtc.begin();
-  setRTC();  // get Epoch time from Internet Time Service
-  fixTimeZone();
+//  rtc.begin();
+//  setRTC();  // get Epoch time from Internet Time Service
+//  fixTimeZone();
 
   setPoles(0,"Up");
   setPoles(0,"Down");
@@ -80,18 +80,18 @@ void loop() {
     doGesture(gesture);
   }
   delay(100);
-  alterPoles()
+  alterPoles();
   
-  secs = rtc.getSeconds();
-
-  //MAIN CLOCK LOOP
-  if (secs == 0) fixTimeZone(); // when secs is 0, update everything and correct for time zone
-  // otherwise everything else stays the same.
-  printDate();
-  printTime();
-  Serial.println();
-  while (secs == rtc.getSeconds())delay(10); // wait until seconds change
-  if (mins==59 && secs ==0) setRTC(); // get NTP time every hour at minute 59
+//  secs = rtc.getSeconds();
+//
+//  //MAIN CLOCK LOOP
+//  if (secs == 0) fixTimeZone(); // when secs is 0, update everything and correct for time zone
+//  // otherwise everything else stays the same.
+//  printDate();
+//  printTime();
+//  Serial.println();
+//  while (secs == rtc.getSeconds())delay(10); // wait until seconds change
+//  if (mins==59 && secs ==0) setRTC(); // get NTP time every hour at minute 59
 }
 
 void doGesture(String temp) {
