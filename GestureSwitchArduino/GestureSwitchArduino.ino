@@ -74,14 +74,19 @@ void loop() {
 //of its current state.
 void switchPole(String path) {
   int call = getPoles(path);
+  call = invert(call);
   if (path == "One") {
-    digitalWrite(A1,invert(call));
+    digitalWrite(A1,call);
+    setPoles(call,path);
   } else if (path == "Two") {
     digitalWrite(A2,invert(call));
+    setPoles(call,path);
   } else if (path == "Three") {
     digitalWrite(A3,invert(call));
+    setPoles(call,path);
   } else if (path == "Four") {
     digitalWrite(A4,invert(call));
+    setPoles(call,path);
   } else {
     return;
   }
