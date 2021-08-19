@@ -63,7 +63,7 @@ void loop() {
   getGesture(&gesture,&count); //returns a count and the gesture as a String
   //if a gesture was found and it enters the case and leaves with default values.
   if(gesture != "unknown" && count == 1) {
-    doGesture(gesture);
+    switchPole(getSwipe(gesture));
     count--;
     gesture = "unknown";
   }
@@ -136,12 +136,6 @@ void setPoles(int num, String path) {
   } else {
     Serial.println(firebaseData.errorReason());
   }
-}
-
-/*******************************************************************************/
-
-void doGesture(String gesture) {
-  switchPole(getSwipe(gesture));
 }
 
 /*******************************************************************************/
