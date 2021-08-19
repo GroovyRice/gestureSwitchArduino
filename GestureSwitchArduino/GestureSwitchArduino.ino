@@ -103,7 +103,8 @@ void checkOverride() {
 
 void setOverride() {
   if (Firebase.setInt(firebaseData, "/alterPoles/overrideFlag", 0)) {
-  if (firebaseData.dataType() == "int"){
+  if (firebaseData.dataType() == "int")
+    Serial.println(firebaseData.intData());
   } else {
     Serial.println(firebaseData.errorReason());
   }
@@ -175,6 +176,7 @@ void setPoles(int num, String path) {
   }
   if (Firebase.setBool(firebaseData, "/alterPoles/pole" + path, call)) {
   if (firebaseData.dataType() == "boolean")
+    Serial.println(firebaseData.boolData());
   } else {
     Serial.println(firebaseData.errorReason());
   }
