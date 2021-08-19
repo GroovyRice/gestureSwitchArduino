@@ -71,6 +71,7 @@ void loop() {
   getGesture(&gesture,&count); //returns a count and the gesture as a String
   //if a gesture was found and it enters the case and leaves with default values.
   if(count == 1) {
+    Serial.println("Gesture: " + gesture);
     switchPole(getSwipe(gesture));
     count--;
   }
