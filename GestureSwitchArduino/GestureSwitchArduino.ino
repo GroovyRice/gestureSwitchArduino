@@ -2,11 +2,7 @@
 #include "paj7620.h"
 #include <Firebase_Arduino_WiFiNINA.h>
 #include <RTCZero.h>
-#define FIREBASE_HOST "gesture-switch-445f4-default-rtdb.asia-southeast1.firebasedatabase.app"
-#define FIREBASE_AUTH "AZMMUzW8jhmr31s5tY6kASyaPGcXsH8netRNDjPV"
-#define WIFI_SSID "Telstra43B1"
-#define WIFI_PASSWORD "4173935201"
-
+#include "secrets.h"
 
 FirebaseData firebaseData;
 /*
@@ -31,7 +27,7 @@ void setup() {
   Serial.print("Connecting to WiFi…");
   int status = WL_IDLE_STATUS;
   while (status != WL_CONNECTED) {
-    status = WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+    status = WiFi.begin(SECRET_WIFISSID, SECRET_WIFIPASSWORD);
     Serial.print(".");
     delay(300);
   }
@@ -39,7 +35,7 @@ void setup() {
   Serial.println(WiFi.localIP());
   Serial.println();
 
-  Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH, WIFI_SSID, WIFI_PASSWORD);
+  Firebase.begin(SECRET_FIREBASEHOST, SECRET_FIREBASEAUTH, SECRET_WIFISSID, SECRET_WIFIPASSWORD);
   Firebase.reconnectWiFi(true);
 
   uint8_t error = paj7620Init();      // initialize Paj7620 registers
