@@ -76,7 +76,10 @@ void loop() {
     gesture = "unknown";
   }
   checkOverride();
-  Serial.println(Poles);
+  Serial.println(Poles[0]);
+  Serial.println(Poles[1]);
+  Serial.println(Poles[2]);
+  Serial.println(Poles[3]);
 }
 /*******************************************************************************/
 
