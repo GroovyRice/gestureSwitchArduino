@@ -76,11 +76,12 @@ void loop() {
     gesture = "unknown";
   }
   checkOverride();
+  /*
   Serial.println("Pole Values");
   Serial.println(Poles[0]);
   Serial.println(Poles[1]);
   Serial.println(Poles[2]);
-  Serial.println(Poles[3]);
+  Serial.println(Poles[3]);*/
 }
 /*******************************************************************************/
 
@@ -89,10 +90,10 @@ void checkOverride() {
     if (firebaseData.dataType() == "int") {
       int temp = firebaseData.intData();
       if(temp == 1) {
-        if(Poles[0] == getPoles("One")) {switchPole("One");}
-        if(Poles[1] == getPoles("Two")) {switchPole("Two");}
-        if(Poles[2] == getPoles("Three")) {switchPole("Three");}
-        if(Poles[3] == getPoles("Four")) {switchPole("Four");}
+        Serial.println("Poles[0] = " + Poles[0]);
+        Serial.println("getPoles("One") = " + getPoles("One"));
+        Serial.println("Poles[1] = " + Poles[1]);
+        Serial.println("getPoles("Two") = " + getPoles("Two"));
         setOverride();
         return;
       } else {
