@@ -17,9 +17,8 @@ FirebaseData firebaseData;
 #define GES_ENTRY_TIME 800       // When you want to recognize the Forward/Backward gestures, your gestures' reaction time must less than GES_ENTRY_TIME(0.8s).
 #define GES_QUIT_TIME 500
 
+/*******************************************************************************/
 void setup() {
-  uint8_t error = 0;
-
   pinMode(A1,OUTPUT);
   pinMode(A2,OUTPUT);
   pinMode(A3,OUTPUT);
@@ -43,32 +42,37 @@ void setup() {
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH, WIFI_SSID, WIFI_PASSWORD);
   Firebase.reconnectWiFi(true);
 
-  setPoles(0,"Up");
-  setPoles(0,"Down");
-  setPoles(0,"Left");
-  setPoles(0,"Right");
+  //setPoles(0,"Up");
+  //setPoles(0,"Down");
+  //setPoles(0,"Left");
+  //setPoles(0,"Right");
 
-  Serial.println("\nPAJ7620U2 TEST DEMO: Recognize 9 gestures.");
-
-  error = paj7620Init();      // initialize Paj7620 registers
+  uint8_t error = paj7620Init();      // initialize Paj7620 registers
   if (error) {
     Serial.print("INIT ERROR,CODE:");
     Serial.println(error);
   } else {
     Serial.println("INIT OK");
   }
-  Serial.println("Please input your gestures:\n");
-  }
+  Serial.println("GESTURE SWITCH SETUP COMPLETE");
+}
+/*******************************************************************************/
 
+int count;
+String gesture;
+byte data;
+
+/*******************************************************************************/
 void loop() {
   //MAKE getGesture() to return a number
-  String gesture = getGesture();
-  if(gesture != "unknown") {
+  getGesture(&gesture,&count);
+  if(gesture != "unknown" && count == 1) {
     doGesture(gesture);
+    count--;
   }
-  delay(100);
-  alterPoles();
 }
+
+/*******************************************************************************/
 
 void doGesture(String temp) {
   int num, call;
@@ -124,6 +128,8 @@ void doGesture(String temp) {
   return;
 }
 
+/*******************************************************************************/
+
 void setPoles(int num, String path) {
   if (Firebase.setFloat(firebaseData, "/setPoles/" + path, num)) {
   if (firebaseData.dataType() == "float")
@@ -158,82 +164,33 @@ int getSwipe(String path) {
     Serial.println(firebaseData.errorReason());
   }
 }
-/*
-void alterPoles() {
-  int poleOne, poleTwo, poleThree, poleFour;
-  String strOne, strTwo, strThree, strFour;
-  poleOne = getAlterPoles("One");
-  poleTwo = getAlterPoles("Two");
-  poleThree = getAlterPoles("Three");
-  poleFour = getAlterPoles("Four");
-  strOne = findPole(1);
-  strTwo = findPole(2);
-  strThree = findPole(3);
-  strFour = findPole(4);
-  digitalWrite(A1,poleOne);
-  digitalWrite(A2,poleTwo);
-  digitalWrite(A3,poleThree);
-  digitalWrite(A4,poleFour);
-}
 
-int getAlterPoles(String path) {
-  bool temp;
-  if (Firebase.getInt(firebaseData, "/alterPoles/pole" + path)) {
-    if (firebaseData.dataType() == "boolean") {
-      temp = firebaseData.boolData();
-      Serial.println(temp);
-      if(temp) {
-        return 1;
-      } else {
-        return 0;
-      }
-    }
-  } else {
-    Serial.println(firebaseData.errorReason());
-  }
-}
+/*******************************************************************************/
 
-String findPole(int pole) {
-  if (pole == getSwipe("swipeUpNum")) {
-    return "Up";
-  } else if (pole == getSwipe("swipeDownNum")) {
-    return "Down";
-  } else if (pole == getSwipe("swipeLeftNum")) {
-    return "Left";
-  } else if (pole == getSwipe("swipeRightNum")) {
-    return "Right";
-//  } else if (){
-//    return "";
-  } else {
-    return "None";
-  }
-}
-*/
-String getGesture() {
-  uint8_t data = 0;
-  uint8_t data1 = 0;
-  uint8_t error = 0;
-
-  error = paj7620ReadReg(0x43, 1, &data);       // Read Bank_0_Reg_0x43/0x44 for gesture result.
-  if(error) {return "unknown";}
-
-  String value = "unknown";
+void getGesture(String* value,int* num) {
+  *value = "unknown";
+  uint8_t error = paj7620ReadReg(0x43, 1, &data);       // Read Bank_0_Reg_0x43/0x44 for gesture result.
+  if(error) {return;}
 
   delay(GES_ENTRY_TIME);
   paj7620ReadReg(0x43, 1, &data);
 
   switch (data) {                 // When different gestures be detected, the variable 'data' will be set to different values by paj7620ReadReg(0x43, 1, &data).
     case GES_RIGHT_FLAG:
-      value = "Right";
+      *value = "Right";
+      *num = 1;
       break;
     case GES_LEFT_FLAG:
-      value = "Left";
+      *value = "Left";
+      *num = 1;
       break;
     case GES_UP_FLAG:
-      value = "Up";
+      *value = "Up";
+      *num = 1;
       break;
     case GES_DOWN_FLAG:
-      value = "Down";
+      *value = "Down";
+      *num = 1;
       break;
 //    case GES_FORWARD_FLAG:
 //      value = "Forward";
@@ -254,5 +211,5 @@ String getGesture() {
       break;
   }
   delay(GES_QUIT_TIME);
-  return value;
+  return;
 }
