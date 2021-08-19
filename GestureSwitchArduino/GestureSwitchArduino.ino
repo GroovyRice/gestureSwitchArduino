@@ -42,10 +42,23 @@ void setup() {
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH, WIFI_SSID, WIFI_PASSWORD);
   Firebase.reconnectWiFi(true);
 
+<<<<<<< HEAD
   //setPoles(0,"Up");
   //setPoles(0,"Down");
   //setPoles(0,"Left");
   //setPoles(0,"Right");
+=======
+//  rtc.begin();
+//  setRTC();  // get Epoch time from Internet Time Service
+//  fixTimeZone();
+
+  setPoles(0,"Up");
+  setPoles(0,"Down");
+  setPoles(0,"Left");
+  setPoles(0,"Right");
+
+  Serial.println("\nPAJ7620U2 TEST DEMO: Recognize 9 gestures.");
+>>>>>>> e2c7997c37f35cb0ba5cf382041a3946964a82f6
 
   uint8_t error = paj7620Init();      // initialize Paj7620 registers
   if (error) {
@@ -70,6 +83,22 @@ void loop() {
     doGesture(gesture);
     count--;
   }
+<<<<<<< HEAD
+=======
+  delay(100);
+  // alterPoles();
+  
+//  secs = rtc.getSeconds();
+//
+//  //MAIN CLOCK LOOP
+//  if (secs == 0) fixTimeZone(); // when secs is 0, update everything and correct for time zone
+//  // otherwise everything else stays the same.
+//  printDate();
+//  printTime();
+//  Serial.println();
+//  while (secs == rtc.getSeconds())delay(10); // wait until seconds change
+//  if (mins==59 && secs ==0) setRTC(); // get NTP time every hour at minute 59
+>>>>>>> e2c7997c37f35cb0ba5cf382041a3946964a82f6
 }
 
 /*******************************************************************************/
