@@ -199,6 +199,7 @@ void alterPoles() {
 }
 
 int getAlterPoles(String path) {
+  bool temp;
   if (Firebase.getInt(firebaseData, "/alterPoles/pole" + path)) {
     if (firebaseData.dataType() == "boolean") {
       temp = firebaseData.boolData();
@@ -223,8 +224,6 @@ String findPole(int pole) {
     return "Left";
   } else if (pole == getSwipe("swipeRightNum")) {
     return "Right";
-  } else if (){
-    return "";
   } else {
     return "None"
   }
