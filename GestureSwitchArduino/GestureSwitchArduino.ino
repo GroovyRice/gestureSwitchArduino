@@ -138,7 +138,7 @@ void setPoles(int num, String path) {
 String getSwipe(String path) {
   if (Firebase.getString(firebaseData, "/setGestures/swipe" + path +"Num")) {
     if (firebaseData.dataType() == "string") {
-      String temp = firebaseData.intData();
+      String temp = firebaseData.stringData();
       Serial.println(temp);
       return temp;
     }
