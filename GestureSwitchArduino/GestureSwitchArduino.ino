@@ -84,10 +84,10 @@ void checkOverride() {
     if (firebaseData.dataType() == "int") {
       int temp = firebaseData.intData();
       if(temp == 1) {
-        if(Poles[0] != getPoles("One")) { switchPole("One");}
-        if(Poles[1] != getPoles("Two")) { switchPole("Two");}
-        if(Poles[2] != getPoles("Three")) { switchPole("Three");}
-        if(Poles[3] != getPoles("Four")) { switchPole("Four");}
+        if(Poles[0] != getPoles("One")) { statePole("One");}
+        if(Poles[1] != getPoles("Two")) { statePole("Two");}
+        if(Poles[2] != getPoles("Three")) { statePole("Three");}
+        if(Poles[3] != getPoles("Four")) { statePole("Four");}
         setOverride();
         return;
       } else {
@@ -109,6 +109,34 @@ void setOverride() {
     Serial.println(firebaseData.errorReason());
   }
 }
+
+/*******************************************************************************/
+//Takes the string of the pole that will be changed and sets it to the opposite
+//of its current state.
+void statePole(String path) {
+  int call = getPoles(path);
+  if (path == "One") {
+    digitalWrite(A1,call);
+    setPoles(call,path);
+    Poles[0] = call;
+  } else if (path == "Two") {
+    digitalWrite(A2,call);
+    setPoles(call,path);
+    Poles[1] = call;
+  } else if (path == "Three") {
+    digitalWrite(A3,call);
+    setPoles(call,path);
+    Poles[2] = call;
+  } else if (path == "Four") {
+    digitalWrite(A4,call);
+    setPoles(call,path);
+    Poles[3] = call;
+  } else {
+    return;
+  }
+  return;
+}
+
 /*******************************************************************************/
 //Takes the string of the pole that will be changed and sets it to the opposite
 //of its current state.
