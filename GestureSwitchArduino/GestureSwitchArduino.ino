@@ -144,7 +144,6 @@ String getSwipe(String path) {
   if (Firebase.getString(firebaseData, "/setGestures/swipe" + path +"Num")) {
     if (firebaseData.dataType() == "string") {
       String temp = firebaseData.stringData();
-      Serial.println(temp);
       return temp;
     }
   } else {
