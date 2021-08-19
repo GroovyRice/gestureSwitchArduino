@@ -71,7 +71,7 @@ void loop() {
     doGesture(gesture);
   }
   delay(100);
-  alterPoles();
+  // alterPoles();
   
 //  secs = rtc.getSeconds();
 //
