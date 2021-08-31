@@ -1,10 +1,10 @@
 #include <Wire.h>
 #include "paj7620.h"
 #include <Firebase_Arduino_WiFiNINA.h>
-#include <RTCZero.h>
 #include "secrets.h"
 
 FirebaseData firebaseData;
+
 /*
   Notice: When you want to recognize the Forward/Backward gestures, your gestures' reaction time must less than GES_ENTRY_TIME(0.8s).
         You also can adjust the reaction time according to the actual circumstance.
@@ -15,10 +15,14 @@ FirebaseData firebaseData;
 
 /*******************************************************************************/
 void setup() {
+
+  pinMode(A5,OUTPUT);
   pinMode(A1,OUTPUT);
   pinMode(A2,OUTPUT);
   pinMode(A3,OUTPUT);
   pinMode(A4,OUTPUT);
+
+  digitalWrite(A5,HIGH);
 
   Serial.begin(9600);
   delay(500);
@@ -64,14 +68,23 @@ int Poles[] = {0,0,0,0};
 /*******************************************************************************/
 //MAIN PROGRAM LOOP
 void loop() {
-  getGesture(&gesture,&count); //returns a count and the gesture as a String
-  //if a gesture was found and it enters the case and leaves with default values.
-  if(count == 1) {
-    Serial.println("Gesture: " + gesture);
-    switchPole(getSwipe(gesture));
-    count--;
+  if(true == getReset()) {
+      setReset();
+      Serial.println("Reset in progress...");
+      delay(1000);
+      digitalWrite(A5, LOW);
   }
-  checkOverride();
+  while(1) {
+    getGesture(&gesture,&count); //returns a count and the gesture as a String
+    //if a gesture was found and it enters the case and leaves with default values.
+    if(count == 1) {
+      Serial.println("Gesture: " + gesture);
+      switchPole(getSwipe(gesture));
+      count--;
+      }
+      checkOverride();
+  }
+
 }
 /*******************************************************************************/
 
@@ -137,6 +150,7 @@ void statePole(String path) {
 //Takes the string of the pole that will be changed and sets it to the opposite
 //of its current state.
 void switchPole(String path) {
+  if(path == "None") {return;}
   Serial.println("SwitchPoles was Run. The Path is " + path);
   int call = getPoles(path);
   call = invert(call);
@@ -216,7 +230,32 @@ String getSwipe(String path) {
       return temp;
     }
   } else {
-    Serial.println("FireBase Err 4: " +firebaseData.errorReason());
+    Serial.println("FireBase Err 5: " +firebaseData.errorReason());
+  }
+}
+
+/*******************************************************************************/
+
+boolean getReset() {
+  bool temp;
+  if (Firebase.getBool(firebaseData, "/Reset/reset")) {
+    if (firebaseData.dataType() == "boolean") {
+      temp = firebaseData.boolData();
+      return temp;
+    }
+  } else {
+    Serial.println("FireBase Err 6: " +firebaseData.errorReason());
+  }
+}
+
+/*******************************************************************************/
+
+void setReset() {
+  if (Firebase.setBool(firebaseData, "/Reset/reset", false)) {
+  if (firebaseData.dataType() == "boolean")
+    Serial.println(firebaseData.boolData());
+  } else {
+    Serial.println("FireBase Err 7: " +firebaseData.errorReason());
   }
 }
 
@@ -226,29 +265,25 @@ void getGesture(String* value,int* num) {
   *value = "unknown";
   uint8_t error = paj7620ReadReg(0x43, 1, &data);       // Read Bank_0_Reg_0x43/0x44 for gesture result.
   if(error) {return;}
-
-  delay(GES_ENTRY_TIME);
-  paj7620ReadReg(0x43, 1, &data);
-
   switch (data) {                 // When different gestures be detected, the variable 'data' will be set to different values by paj7620ReadReg(0x43, 1, &data).
     case GES_RIGHT_FLAG:
       *value = "Right";
-      if(getSwipe("Right")=="None") {return;}
+      //if(getSwipe("Right")=="None") {return;}
       *num = 1;
       break;
     case GES_LEFT_FLAG:
       *value = "Left";
-      if(getSwipe("Left")=="None") {return;}
+      //if(getSwipe("Left")=="None") {return;}
       *num = 1;
       break;
     case GES_UP_FLAG:
       *value = "Up";
-      if(getSwipe("Up")=="None") {return;}
+      //if(getSwipe("Up")=="None") {return;}
       *num = 1;
       break;
     case GES_DOWN_FLAG:
       *value = "Down";
-      if(getSwipe("Down")=="None") {return;}
+      //if(getSwipe("Down")=="None") {return;}
       *num = 1;
       break;
 //    case GES_FORWARD_FLAG:
@@ -269,6 +304,5 @@ void getGesture(String* value,int* num) {
     default:
       break;
   }
-    delay(GES_QUIT_TIME);
   return;
 }
