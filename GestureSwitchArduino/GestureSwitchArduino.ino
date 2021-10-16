@@ -14,6 +14,25 @@ FirebaseData firebaseData;
 #define GES_QUIT_TIME 500
 
 /*******************************************************************************/
+
+int count;
+String gesture;
+byte data;
+int Poles[] = {0,0,0,0};
+int Gestures[] = {0,0,0,0}; //{UP,DOWN,LEFT,RIGHT}
+
+void getGesture(String* value,int* num);
+void checkOverride();
+void setOverride();
+void statePole(String path);
+void switchPole(String path);
+int getPoles(String path);
+void setPoles(int num, String path);
+String getSwipe(String path);
+boolean getReset();
+void setReset();
+
+/*******************************************************************************/
 void setup() {
 
   pinMode(A1,OUTPUT);
@@ -21,10 +40,10 @@ void setup() {
   pinMode(A3,OUTPUT);
   pinMode(A4,OUTPUT);
   pinMode(A5,OUTPUT);
-  pinMode(-1,OUTPUT);
-  pinMode(-2,OUTPUT);
-  pinMode(-3,OUTPUT);
-  pinMode(-4,OUTPUT);
+  pinMode(0,OUTPUT);
+  pinMode(A6,OUTPUT);
+  pinMode(7,OUTPUT);
+  pinMode(6,OUTPUT);
 
   digitalWrite(A5,HIGH);
 
@@ -62,13 +81,6 @@ void setup() {
 
   Serial.println("GESTURE SWITCH SETUP COMPLETE");
 }
-/*******************************************************************************/
-
-int count;
-String gesture;
-byte data;
-int Poles[] = {0,0,0,0};
-int Gestures[] = {0,0,0,0}; //{UP,DOWN,LEFT,RIGHT}
 
 /*******************************************************************************/
 //MAIN PROGRAM LOOP
@@ -117,12 +129,13 @@ void checkOverride() {
 
 void setOverride() {
   if (Firebase.setInt(firebaseData, "/alterPoles/overrideFlag", 0)) {
-  if (firebaseData.dataType() == "int")
-    Serial.println(firebaseData.intData());
-  } else {
-    Serial.println("FireBase Err 2: " +firebaseData.errorReason());
+    if (firebaseData.dataType() == "int") {
+      //Serial.println(firebaseData.intData());
+    } else {
+      Serial.println("FireBase Err 2: " +firebaseData.errorReason());
+    }
   }
-}
+} 
 
 /*******************************************************************************/
 //Takes the string of the pole that will be changed and sets it to the opposite
@@ -158,7 +171,7 @@ void switchPole(String path) {
   if(path == "None") {return;}
   Serial.println("SwitchPoles was Run. The Path is " + path);
   int call = getPoles(path);
-  call = invert(call);
+  call = !call;
   if (path == "One") {
     digitalWrite(A1,call);
     setPoles(call,path);
@@ -179,16 +192,6 @@ void switchPole(String path) {
     return;
   }
   return;
-}
-
-/*******************************************************************************/
-//Inverts 0 or 1 to 0 or 1
-int invert(int num) {
-  if(num == 1) {
-    return 0;
-  } else {
-    return 1;
-  }
 }
 
 /*******************************************************************************/
@@ -219,10 +222,11 @@ void setPoles(int num, String path) {
     call = false;
   }
   if (Firebase.setBool(firebaseData, "/alterPoles/pole" + path, call)) {
-  if (firebaseData.dataType() == "boolean")
-    Serial.println(firebaseData.boolData());
-  } else {
-    Serial.println("FireBase Err 4: " +firebaseData.errorReason());
+    if (firebaseData.dataType() == "boolean") {
+      //Serial.println(firebaseData.boolData());
+    } else {
+      Serial.println("FireBase Err 4: " +firebaseData.errorReason());
+    }
   }
 }
 
@@ -257,10 +261,11 @@ boolean getReset() {
 
 void setReset() {
   if (Firebase.setBool(firebaseData, "/Reset/reset", false)) {
-  if (firebaseData.dataType() == "boolean")
-    Serial.println(firebaseData.boolData());
-  } else {
-    Serial.println("FireBase Err 7: " +firebaseData.errorReason());
+    if (firebaseData.dataType() == "boolean") {
+      //Serial.println(firebaseData.boolData());
+    } else {
+      Serial.println("FireBase Err 7: " +firebaseData.errorReason());
+    }
   }
 }
 
@@ -274,25 +279,26 @@ void getGesture(String* value,int* num) {
     case GES_RIGHT_FLAG:
       *value = "Right";
       Gestures[4] = !Gestures[4];
-      digitalWrite(-4,invert(Gestures[4]));
+      digitalWrite(6,Gestures[4]);
       *num = 1;
       break;
     case GES_LEFT_FLAG:
       *value = "Left";
       Gestures[3] = !Gestures[3];
-      digitalWrite(-3,Gestures[3]);
+      digitalWrite(7,Gestures[3]);
       *num = 1;
       break;
     case GES_UP_FLAG:
       *value = "Up";
       Gestures[1] = !Gestures[1];
-      digitalWrite(-1,Gestures[1]);
+      digitalWrite(0,Gestures[1]);
       *num = 1;
       break;
     case GES_DOWN_FLAG:
       *value = "Down";
       Gestures[2] = !Gestures[2];
-      digitalWrite(-2,Gestures[2]);
+      Serial.println(Gestures[2]);
+      digitalWrite(A6,Gestures[2]);
       *num = 1;
       break;
 //    case GES_FORWARD_FLAG:
