@@ -16,11 +16,15 @@ FirebaseData firebaseData;
 /*******************************************************************************/
 void setup() {
 
-  pinMode(A5,OUTPUT);
   pinMode(A1,OUTPUT);
   pinMode(A2,OUTPUT);
   pinMode(A3,OUTPUT);
   pinMode(A4,OUTPUT);
+  pinMode(A5,OUTPUT);
+  pinMode(-1,OUTPUT);
+  pinMode(-2,OUTPUT);
+  pinMode(-3,OUTPUT);
+  pinMode(-4,OUTPUT);
 
   digitalWrite(A5,HIGH);
 
@@ -64,6 +68,7 @@ int count;
 String gesture;
 byte data;
 int Poles[] = {0,0,0,0};
+int Gestures[] = {0,0,0,0}; //{UP,DOWN,LEFT,RIGHT}
 
 /*******************************************************************************/
 //MAIN PROGRAM LOOP
@@ -268,22 +273,26 @@ void getGesture(String* value,int* num) {
   switch (data) {                 // When different gestures be detected, the variable 'data' will be set to different values by paj7620ReadReg(0x43, 1, &data).
     case GES_RIGHT_FLAG:
       *value = "Right";
-      //if(getSwipe("Right")=="None") {return;}
+      Gestures[4] = !Gestures[4];
+      digitalWrite(-4,invert(Gestures[4]));
       *num = 1;
       break;
     case GES_LEFT_FLAG:
       *value = "Left";
-      //if(getSwipe("Left")=="None") {return;}
+      Gestures[3] = !Gestures[3];
+      digitalWrite(-3,Gestures[3]);
       *num = 1;
       break;
     case GES_UP_FLAG:
       *value = "Up";
-      //if(getSwipe("Up")=="None") {return;}
+      Gestures[1] = !Gestures[1];
+      digitalWrite(-1,Gestures[1]);
       *num = 1;
       break;
     case GES_DOWN_FLAG:
       *value = "Down";
-      //if(getSwipe("Down")=="None") {return;}
+      Gestures[2] = !Gestures[2];
+      digitalWrite(-2,Gestures[2]);
       *num = 1;
       break;
 //    case GES_FORWARD_FLAG:
